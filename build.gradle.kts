@@ -36,6 +36,8 @@ val isReleaseVersion = !version.toString().endsWith("SNAPSHOT")
 val ossrhUsername: String? by project
 val ossrhPassword: String? by project
 
+val publicationName = "mavenJava"
+
 publishing {
     repositories {
         maven {
@@ -51,7 +53,7 @@ publishing {
     }
 
     publications {
-        register("mavenJava", MavenPublication::class) {
+        register(publicationName, MavenPublication::class) {
             pom {
                 from(components["java"])
                 artifact(sourcesJar.get())
@@ -80,5 +82,11 @@ publishing {
                 }
             }
         }
+    }
+}
+
+if (isReleaseVersion) {
+    signing {
+        sign(publishing.publications[publicationName])
     }
 }
